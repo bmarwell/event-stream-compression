@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>de.bmarwell.liberty.eventstreamcompression</groupId>
+  <artifactId>event-stream-compression</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <packaging>war</packaging>
+
+  <properties>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <liberty.env.VERBOSEGC>false</liberty.env.VERBOSEGC>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+      <version>3.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.enterprise</groupId>
+      <artifactId>jakarta.enterprise.cdi-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <version>2.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.enterprise.concurrent</groupId>
+      <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+      <version>2.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.11.2</version>
+        <configuration>
+          <runtimeArtifact>
+            <groupId>io.openliberty</groupId>
+            <artifactId>openliberty-kernel</artifactId>
+            <version>24.0.0.12</version>
+            <type>zip</type>
+          </runtimeArtifact>
+          <userDirectory>${project.build.directory}/wlp-usr/</userDirectory>
+          <features>
+            <acceptLicense>true</acceptLicense>
+            <feature>restfulWS-3.0</feature>
+            <feature>cdi-3.0</feature>
+            <feature>concurrent-2.0</feature>
+            <feature>jsonb-2.0</feature>
+          </features>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

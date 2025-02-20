@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="sse">
+  <featureManager>
+    <feature>localConnector-1.0</feature>
+    <feature>monitor-1.0</feature>
+    <feature>restfulWS-3.0</feature>
+    <feature>cdi-3.0</feature>
+    <feature>concurrent-2.0</feature>
+    <feature>jsonb-2.0</feature>
+  </featureManager>
+
+  <httpEndpoint
+      host="localhost"
+      id="defaultHttpEndpoint"
+      httpPort="8080"
+      httpsPort="-1"
+  >
+    <accessLogging
+        filepath="${server.output.dir}/logs/http_defaultEndpoint_access.log"
+        logFormat="%h %i %u %t &quot;%r&quot; %s %b %D %{R}W"
+    />
+    <compression>
+      <types>application/json</types>
+      <types>text/*</types>
+      <!--types>-text/event-stream</types-->
+    </compression>
+  </httpEndpoint>
+
+  <httpOptions
+      removeServerHeader="true"
+  />
+  <httpDispatcher
+      enableWelcomePage="false"
+  />
+
+  <sslDefault
+      sslRef="defaultSSLConfig"
+      httpHostNameVerification="true"
+  />
+  <ssl
+      id="defaultSSLConfig"
+      securityLevel="HIGH"
+      enforceCipherOrder="true" sslProtocol="TLSv1.2" verifyHostname="true"
+  />
+
+  <webContainer
+      deferServletLoad="false"
+  />
+  <webContainer
+      skipMetaInfResourcesProcessing="true"
+  />
+
+  <cdi12
+      enableImplicitBeanArchives="false"
+  />
+
+  <webApplication
+      location="event-stream-compression.war"
+      contextRoot="/"
+  />
+</server>

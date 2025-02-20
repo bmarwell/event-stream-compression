@@ -1,0 +1,79 @@
+= Compression + text/event-stream bug
+
+This repo demos a bug where events sent via SSE will not be sent to the client when compression is enabled.
+
+== Demo: Not working
+
+.Start demo
+[source,bash]
+----
+# Start the liberty server
+./mvnw compile liberty:dev
+
+# curl into the sse endpoint and see no events
+curl -vvN --compressed  -H "accept-encoding: gzip, *" --url "http://localhost:8080/sse"
+----
+
+=== Expected output
+
+Server-sent events every five seconds
+
+=== Actual output
+
+== Workarounds
+
+=== Demo 1: Client disables compression
+
+.Start server
+[source,bash]
+----
+# Start the liberty server
+./mvnw compile liberty:dev
+
+# curl into the sse endpoint without compression, events will be flowing
+# note: curl defaults to not sending this header, which also works.
+curl -vvN -H "accept-encoding: identity" --url "http://localhost:8080/sse"
+----
+
+However, you cannot make sure no client will ever send an accept-encoding header, especially with browsers.
+
+=== Demo 2: disable compression in Liberty
+
+For now, the best workaround seems to disable events in liberty.
+
+.Add compression exclcusion
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="sse">
+  <httpEndpoint id="defaultHttpEndpoint">
+    <compression>
+      <types>application/json</types>
+      <types>text/*</types>
+      <!-- add this line -->
+      <types>-text/event-stream</types>
+    </compression>
+  </httpEndpoint>
+</server>
+----
+
+.Start server
+[source,bash]
+----
+# Start the liberty server
+./mvnw compile liberty:dev
+
+# curl into the sse endpoint with compression enabled again.
+# Liberty will refuse to compress responses, as configured.
+# Events will flow again (again, uncompressed).
+curl -vvN --compressed -H "accept-encoding: gzip, *" --url "http://localhost:8080/sse"
+----
+
+== Why this is a bug
+
+I think this is a bug because it comes with the default configuration.
+The default is `text/*`, so SSE will never work / stop working once compression is enabled.
+There is no FFDC and no log message, the client just sees "nothing".
+
+
+
