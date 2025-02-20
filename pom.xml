@@ -18,6 +18,8 @@
 
     <liberty.version>24.0.0.12</liberty.version>
     <liberty.env.VERBOSEGC>false</liberty.env.VERBOSEGC>
+
+    <liberty.bootstrap.com.ibm.ws.logging.trace.specification>*=INFO:com.ibm.wsspi.http.channel.compression=finest</liberty.bootstrap.com.ibm.ws.logging.trace.specification>
   </properties>
 
   <dependencies>
